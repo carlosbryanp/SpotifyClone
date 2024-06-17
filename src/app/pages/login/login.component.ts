@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from '../../services/spotify.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,35 +9,38 @@ import { SpotifyService } from '../../services/spotify.service';
 })
 export class LoginComponent implements OnInit {
   accesToken: string = '';
-  refreshToken: string = '';
-  profileData: any;
 
-  constructor(private spotifyService: SpotifyService) {}
+  constructor(private spotifyService: SpotifyService, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.getTokenCallback();
+  }
 
   onLogin() {
     window.location.href = this.spotifyService.login();
   }
 
-  onGetToken() {
-    this.spotifyService.getToken();
-    this.spotifyService.getToken().subscribe((r) => {
-      this.accesToken = r.access_token;
-      this.refreshToken = r.refresh_token;
-      console.log(r);
-      localStorage.setItem('access-token', r.access_token);
-      localStorage.setItem('refresh-token', r.refresh_token);
-    });
+  getTokenCallback() {
+    const authorizationCode = window.location.href.split('=')[1];
+    if (!!authorizationCode) {
+      this.spotifyService.getToken(authorizationCode).subscribe((r) => {
+        this.accesToken = r.access_token;
+        localStorage.setItem('access-token', r.access_token);
+        localStorage.setItem('refresh-token', r.refresh_token);
+        this.router.navigate(['/player']);
+      });
+    }
   }
 
   onGetProfile() {
-    // this.spotifyService.getProfiles().subscribe((r) => {
-    //   console.log(r);
-    // });
-
-    this.spotifyService.getTopRead().subscribe((r) => {
-      console.log(r);
-    });
+    this.spotifyService.getProfile(this.accesToken);
   }
+
+  onPreviousTrack() {
+    // this.spotifyService.skipToPrevious(this.accesToken).subscribe((r) => r);
+  }
+
+  // onNextTrack() {
+  //   this.spotifyService.skipToPrevious(this.accesToken).subscribe((r) => r);
+  // }
 }

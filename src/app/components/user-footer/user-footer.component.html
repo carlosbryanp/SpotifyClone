@@ -1,0 +1,5 @@
+<div class="flex">
+  <img [src]="user.imageUrl" alt="Icone do usuário do spotify" />
+  <span>{{ user.name }}</span>
+  <fa-icon class="icon" [icon]="exitIcon" (click)="logout()"></fa-icon>
+</div>

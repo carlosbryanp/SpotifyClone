@@ -27,13 +27,14 @@ export class LoginComponent implements OnInit {
         this.accesToken = r.access_token;
         localStorage.setItem('access-token', r.access_token);
         localStorage.setItem('refresh-token', r.refresh_token);
-        this.router.navigate(['/player']);
+        this.router.navigate(['/player/home']);
       });
     }
   }
 
   onGetProfile() {
-    this.spotifyService.getProfile(this.accesToken);
+    // this.spotifyService.getTopRead(this.accesToken);
+    //   .subscribe((r) => console.log(r));
   }
 
   onPreviousTrack() {

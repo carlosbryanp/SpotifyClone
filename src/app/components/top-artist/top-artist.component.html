@@ -1,0 +1,9 @@
+<div class="card p-20" *ngFor="let artist of topArtist">
+  <div class="artist flex">
+    <div class="artist-info">
+      <span class="tittle-bg"> {{ artist.name }} </span>
+      <button type="button">PLAY</button>
+    </div>
+    <img [src]="artist.imageUrl" alt="Imagem do top artista" />
+  </div>
+</div>

@@ -5,13 +5,15 @@ import { Buffer } from 'buffer';
 import { IUser } from '../interfaces/IUser';
 import { map } from 'rxjs';
 import { IPlaylist } from '../interfaces/IPlaylist';
+import { Router } from '@angular/router';
+import { IArtist } from '../interfaces/IArtist';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SpotifyService {
   private authEndPoint = SpotifyConfiguration.authEndpoint;
-  private baseApi = 'https://api.spotify.com/';
+  private baseApi = SpotifyConfiguration.baseApi;
   private clientId = SpotifyConfiguration.clientId;
   private clientSecret = SpotifyConfiguration.clientSecret;
   private redirectUrl = SpotifyConfiguration.redirectUrl;
@@ -20,7 +22,7 @@ export class SpotifyService {
   deviceId: string;
   user: IUser;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   login() {
     const params = new HttpParams({
@@ -35,6 +37,11 @@ export class SpotifyService {
     return authUrl;
   }
 
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
+
   getToken(authorizationCode: string) {
     const credentials = `${this.clientId}:${this.clientSecret}`;
     const encodedCredentials = Buffer.from(credentials).toString('base64');
@@ -46,7 +53,6 @@ export class SpotifyService {
       'content-type': 'application/x-www-form-urlencoded',
       Authorization: `Basic ${encodedCredentials}`,
     });
-
     return this.http.post<any>(`https://accounts.spotify.com/api/token`, body, {
       headers,
     });
@@ -57,7 +63,7 @@ export class SpotifyService {
       Authorization: `Bearer ${token}`,
     });
     const userData = this.http
-      .get<any>('https://api.spotify.com/v1/me', { headers })
+      .get<any>(`${this.baseApi}v1/me`, { headers })
       .pipe(map((response) => this.mapToUserData(response)));
     userData.subscribe((data) => {
       this.user = data;
@@ -77,10 +83,9 @@ export class SpotifyService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-
     return this.http
       .get<any>(
-        `https://api.spotify.com/v1/users/${this.user.id}/playlists?limit=30&offset=0`,
+        `${this.baseApi}v1/users/${this.user.id}/playlists?limit=30&offset=0`,
         {
           headers,
         }
@@ -95,8 +100,27 @@ export class SpotifyService {
       imageUrl: playlist.images.length > 0 ? playlist.images[0].url : '',
     }));
   }
-}
 
+  getTopRead(token: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http
+      .get<any>(
+        'https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=1&offset=0',
+        { headers }
+      )
+      .pipe(map((response) => this.mapToTopArtist(response.items)));
+  }
+
+  private mapToTopArtist(artists: any[]): IArtist[] {
+    return artists.map((artist) => ({
+      id: artist.id,
+      name: artist.name,
+      imageUrl: artist.images.length > 0 ? artist.images[0].url : '',
+    }));
+  }
+}
 //   getPlaybackState(token: string) {
 //     const headers = new HttpHeaders({
 //       Authorization: `Bearer ${token}`,
@@ -107,16 +131,6 @@ export class SpotifyService {
 //         this.deviceId = result.device.id;
 //       });
 //   }
-// }
-
-// getTopRead(token: string) {
-//   const headers = new HttpHeaders({
-//     Authorization: `Bearer ${token}`,
-//   });
-//   return this.http.get(
-//     'https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=20&offset=0',
-//     { headers }
-//   );
 // }
 
 // skipToPrevious(token: string) {

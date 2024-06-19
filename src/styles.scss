@@ -23,18 +23,18 @@ body {
   }
 }
 
-.tittle {
+.title {
   color: $cor-primaria;
   display: block;
   font-weight: 700;
 
   &-bg {
-    @extend .tittle;
+    @extend .title;
     font-size: 2.2rem;
   }
 
   &-md {
-    @extend .tittle;
+    @extend .title;
     font-size: 1.4rem;
   }
 }

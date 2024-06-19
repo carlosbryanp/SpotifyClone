@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { catchError, map, throwError } from 'rxjs';
+
 import { SpotifyConfiguration } from '../../environments/environment';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { IUser } from '../interfaces/IUser';
-import { map } from 'rxjs';
-import { IPlaylist } from '../interfaces/IPlaylist';
-import { Router } from '@angular/router';
-import { IArtist } from '../interfaces/IArtist';
+import {
+  mapToUserPlaylists,
+  mapToSavedTracks,
+  mapToTopArtist,
+  mapToUserData,
+} from '../common/spotifyHelper';
 
 @Injectable({
   providedIn: 'root',
@@ -63,20 +68,12 @@ export class SpotifyService {
       Authorization: `Bearer ${token}`,
     });
     const userData = this.http
-      .get<any>(`${this.baseApi}v1/me`, { headers })
-      .pipe(map((response) => this.mapToUserData(response)));
+      .get<any>(`${this.baseApi}v1/me/`, { headers })
+      .pipe(map((response) => mapToUserData(response)));
     userData.subscribe((data) => {
       this.user = data;
     });
     return userData;
-  }
-
-  private mapToUserData(response: any): IUser {
-    return {
-      name: response.display_name,
-      id: response.id,
-      imageUrl: response.images.pop().url,
-    };
   }
 
   getUserPlaylist(token: string) {
@@ -90,15 +87,7 @@ export class SpotifyService {
           headers,
         }
       )
-      .pipe(map((response) => this.mapToUserPlaylists(response.items)));
-  }
-
-  private mapToUserPlaylists(playlists: any[]): IPlaylist[] {
-    return playlists.map((playlist) => ({
-      id: playlist.id,
-      name: playlist.name,
-      imageUrl: playlist.images.length > 0 ? playlist.images[0].url : '',
-    }));
+      .pipe(map((response) => mapToUserPlaylists(response.items)));
   }
 
   getTopRead(token: string) {
@@ -107,48 +96,67 @@ export class SpotifyService {
     });
     return this.http
       .get<any>(
-        'https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=1&offset=0',
+        `${this.baseApi}v1/me/top/artists?time_range=medium_term&limit=1&offset=0`,
         { headers }
       )
-      .pipe(map((response) => this.mapToTopArtist(response.items)));
+      .pipe(map((response) => mapToTopArtist(response.items)));
   }
 
-  private mapToTopArtist(artists: any[]): IArtist[] {
-    return artists.map((artist) => ({
-      id: artist.id,
-      name: artist.name,
-      imageUrl: artist.images.length > 0 ? artist.images[0].url : '',
-    }));
+  getSavedTracks(token: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http
+      .get<any>(`${this.baseApi}v1/me/tracks?market=BR&limit=50&offset=0`, {
+        headers,
+      })
+      .pipe(map((response) => mapToSavedTracks(response.items)));
+  }
+
+  getPlaybackState(token: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http
+      .get<any>('https://api.spotify.com/v1/me/player', { headers })
+      .subscribe((result) => {
+        this.deviceId = result.device.id;
+      });
+  }
+
+  addToQueue(token: string, musicId: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    const params = new HttpParams()
+      .set('uri', musicId)
+      .set('device_id', this.deviceId);
+    this.http
+      .post(`${this.baseApi}v1/me/player/queue`, null, { headers, params })
+      .subscribe((r) => r);
+  }
+
+  skipToNext(token: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    // const body = new HttpParams().set('device_id', this.deviceId);
+    this.http
+      .post(`${this.baseApi}v1/me/player/next`, null, {
+        headers,
+      })
+      .subscribe((r) => r);
+  }
+
+  skipToPrevious(token: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    // const body = new HttpParams().set('device_id', this.deviceId);
+    this.http
+      .post(`${this.baseApi}v1/me/player/previous`, null, {
+        headers,
+      })
+      .subscribe((r) => r);
   }
 }
-//   getPlaybackState(token: string) {
-//     const headers = new HttpHeaders({
-//       Authorization: `Bearer ${token}`,
-//     });
-//     return this.http
-//       .get<any>('https://api.spotify.com/v1/me/player', { headers })
-//       .subscribe((result) => {
-//         this.deviceId = result.device.id;
-//       });
-//   }
-// }
-
-// skipToPrevious(token: string) {
-//   const headers = new HttpHeaders({
-//     Authorization: `Bearer ${token}`,
-//   });
-//   const body = new HttpParams().set('device_id', this.deviceId);
-//   return this.http.post(`${this.baseApi}v1/me/player/previous`, body, {
-//     headers,
-//   });
-// }
-
-// skipToNext(token: string) {
-//   const headers = new HttpHeaders({
-//     Authorization: `Bearer ${token}`,
-//   });
-//   const body = new HttpParams().set('device_id', this.deviceId);
-//   return this.http.post(`${this.baseApi}v1/me/player/next`, body, {
-//     headers,
-//   });
-// }

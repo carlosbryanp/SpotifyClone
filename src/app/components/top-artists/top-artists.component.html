@@ -1,0 +1,7 @@
+<span class="title-md">Top 5 Artistas</span>
+<div class="top-artists flex" *ngFor="let topArtist of topArtists">
+  <div class="artist-item flex">
+    <img [src]="topArtist.imageUrl" alt="Imagem do artista" />
+    <span> {{ topArtist.name }}</span>
+  </div>
+</div>

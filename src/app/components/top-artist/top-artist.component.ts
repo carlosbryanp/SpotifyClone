@@ -8,7 +8,7 @@ import { IArtist } from '../../interfaces/IArtist';
   styleUrl: './top-artist.component.scss',
 })
 export class TopArtistComponent implements OnInit {
-  topArtist: IArtist[] = [];
+  topArtist: IArtist;
 
   constructor(private spotifyService: SpotifyService) {}
 
@@ -19,7 +19,7 @@ export class TopArtistComponent implements OnInit {
   getTopArtist() {
     const token = localStorage.getItem('access-token');
     this.spotifyService.getTopRead(token).subscribe((userTopArtist) => {
-      this.topArtist = userTopArtist;
+      this.topArtist = userTopArtist[0];
     });
   }
 }

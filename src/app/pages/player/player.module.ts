@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PlayerRoutes } from './player.routes';
 import { CommonModule } from '@angular/common';
@@ -12,6 +13,9 @@ import { HomeComponent } from '../home/home.component';
 import { TopArtistComponent } from '../../components/top-artist/top-artist.component';
 import { RightPanelComponent } from '../../components/right-panel/right-panel.component';
 import { TimeFormatPipe } from '../home/time-format.pipe';
+import { RecentSearchComponent } from '../../components/recent-search/recent-search.component';
+import { TopArtistsComponent } from '../../components/top-artists/top-artists.component';
+import { PlayerCardComponent } from '../../components/player-card/player-card.component';
 
 @NgModule({
   declarations: [
@@ -23,11 +27,15 @@ import { TimeFormatPipe } from '../home/time-format.pipe';
     TopArtistComponent,
     RightPanelComponent,
     TimeFormatPipe,
+    RecentSearchComponent,
+    TopArtistsComponent,
+    PlayerCardComponent,
   ],
   imports: [
     CommonModule,
     FontAwesomeModule,
     RouterModule.forChild(PlayerRoutes),
+    FormsModule,
   ],
 })
 export class PlayerModule {}

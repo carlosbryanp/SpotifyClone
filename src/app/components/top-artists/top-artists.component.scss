@@ -1,0 +1,32 @@
+@import "variaveis.scss";
+
+.top-artists {
+  flex-direction: column;
+
+  div {
+    cursor: pointer;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+
+    &:hover {
+      background-color: $branco;
+    }
+
+    span {
+      color: $preto-transparente-70;
+      font-weight: 600;
+      flex-grow: 1;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    img {
+      width: 40px;
+      border-radius: 50%;
+      flex-grow: 0;
+    }
+  }
+}

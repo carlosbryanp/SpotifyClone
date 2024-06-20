@@ -1,0 +1,28 @@
+@import "variaveis.scss";
+
+.container {
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0px;
+  gap: 15px;
+  color: $cor-primaria;
+
+  span {
+    font-weight: 700;
+    padding: 0px 20px;
+  }
+
+  img {
+    width: 160px;
+    border-radius: 10px;
+  }
+
+  .player-options {
+    align-items: center;
+    gap: 20px;
+
+    fa-icon {
+      cursor: pointer;
+    }
+  }
+}

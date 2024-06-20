@@ -1,0 +1,20 @@
+<div class="flex container card" *ngIf="currentTrack">
+  <img
+    [src]="currentTrack.album.imageUrl"
+    alt="Imagem da musica atual que está tocando."
+  />
+  <span> {{ currentTrack.title }} </span>
+  <div class="player-options flex">
+    <fa-icon
+      class="fa-2x"
+      [icon]="previousIcon"
+      (click)="onPrevious()"
+    ></fa-icon>
+    <fa-icon
+      class="fa-3x"
+      [icon]="isPlaying ? pauseIcon : playIcon"
+      (click)="onPause()"
+    ></fa-icon>
+    <fa-icon class="fa-2x" [icon]="nextIcon" (click)="onNext()"></fa-icon>
+  </div>
+</div>

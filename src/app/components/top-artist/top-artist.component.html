@@ -1,9 +1,9 @@
-<div class="card p-20" *ngFor="let artist of topArtist">
+<div class="card p-20" *ngIf="topArtist">
   <div class="artist flex">
     <div class="artist-info">
-      <span class="title-bg"> {{ artist.name }} </span>
+      <span class="title-bg"> {{ topArtist.name }} </span>
       <button type="button">PLAY</button>
     </div>
-    <img [src]="artist.imageUrl" alt="Imagem do top artista" />
+    <img [src]="topArtist.imageUrl" alt="Imagem do top artista" />
   </div>
 </div>

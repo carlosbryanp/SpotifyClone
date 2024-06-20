@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   faGuitar,
   faHome,
@@ -8,15 +8,17 @@ import {
 import { IPlaylist } from '../../interfaces/IPlaylist';
 import { SpotifyService } from '../../services/spotify.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-left-panel',
   templateUrl: './left-panel.component.html',
   styleUrl: './left-panel.component.scss',
 })
-export class LeftPanelComponent implements OnInit {
+export class LeftPanelComponent implements OnInit, OnDestroy {
   menuSelected = 'Home';
   playlists: IPlaylist[] = [];
+  sub: Subscription;
 
   constructor(private spotifyService: SpotifyService, private router: Router) {}
 
@@ -24,7 +26,6 @@ export class LeftPanelComponent implements OnInit {
     this.getPlaylists();
   }
 
-  //Icons
   homeIcone = faHome;
   searchIcon = faSearch;
   artistIcon = faGuitar;
@@ -37,8 +38,14 @@ export class LeftPanelComponent implements OnInit {
 
   getPlaylists() {
     const token = localStorage.getItem('access-token');
-    this.spotifyService.getUserPlaylist(token).subscribe((userPlaylist) => {
-      this.playlists = userPlaylist;
-    });
+    this.sub = this.spotifyService
+      .getUserPlaylist(token)
+      .subscribe((userPlaylist) => {
+        this.playlists = userPlaylist;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

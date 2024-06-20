@@ -1,44 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SpotifyService } from '../../services/spotify.service';
 import { IMusic } from '../../interfaces/IMusic';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { PlayerService } from '../../services/player.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   musics: IMusic[] = [];
+  currentTrack: IMusic;
   playIcon = faPlay;
 
-  constructor(private spotifyService: SpotifyService) {}
+  subs: Subscription[] = [];
+
+  constructor(
+    private spotifyService: SpotifyService,
+    private playerService: PlayerService
+  ) {}
 
   ngOnInit(): void {
     this.getTracks();
-    this.getPlaybackState();
+    this.getCurrentTrack();
   }
 
   getTracks() {
     const token = localStorage.getItem('access-token');
-    this.spotifyService.getSavedTracks(token).subscribe((music) => {
-      this.musics = music;
-    });
+    const subTracks = this.spotifyService
+      .getSavedTracks(token)
+      .subscribe((music) => {
+        this.musics = music;
+      });
+    this.subs.push(subTracks);
   }
 
   getArtist(music: IMusic) {
     return music.artists.map((artist) => artist.name).join(', ');
   }
 
-  getPlaybackState() {
-    const token = localStorage.getItem('access-token');
-    this.spotifyService.getPlaybackState(token);
+  getCurrentTrack() {
+    const subCurrentTrack = this.playerService.currentTrack.subscribe(
+      (music) => {
+        this.currentTrack = music;
+      }
+    );
+    this.subs.push(subCurrentTrack);
   }
 
   onPlayTrack(music: IMusic) {
     const token = localStorage.getItem('access-token');
     this.spotifyService.addToQueue(token, music.id);
     this.spotifyService.skipToNext(token);
-    // this.spotifyService.skipToPrevious(token);
+    this.playerService.defineCurrentTrack(music);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }

@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getTracks() {
-    const token = localStorage.getItem('access-token');
+    const token = this.getToken();
     const subTracks = this.spotifyService
       .getSavedTracks(token)
       .subscribe((music) => {
@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onPlayTrack(music: IMusic) {
-    const token = localStorage.getItem('access-token');
+    const token = this.getToken();
     this.spotifyService.addToQueue(token, music.id);
     this.spotifyService.skipToNext(token);
     this.playerService.defineCurrentTrack(music);
@@ -59,5 +59,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.forEach((sub) => sub.unsubscribe());
+  }
+
+  private getToken(): string | null {
+    return localStorage.getItem('access-token');
   }
 }

@@ -16,6 +16,8 @@ import { TimeFormatPipe } from '../home/time-format.pipe';
 import { RecentSearchComponent } from '../../components/recent-search/recent-search.component';
 import { TopArtistsComponent } from '../../components/top-artists/top-artists.component';
 import { PlayerCardComponent } from '../../components/player-card/player-card.component';
+import { MusicListComponent } from '../music-list/music-list.component';
+import { BannerListComponent } from '../../components/banner-list/banner-list.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { PlayerCardComponent } from '../../components/player-card/player-card.co
     RecentSearchComponent,
     TopArtistsComponent,
     PlayerCardComponent,
+    MusicListComponent,
+    BannerListComponent,
   ],
   imports: [
     CommonModule,

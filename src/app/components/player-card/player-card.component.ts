@@ -44,14 +44,8 @@ export class PlayerCardComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
-  onPrevious() {
-    const token = localStorage.getItem('access-token');
-    this.spotifyService.skipToPrevious(token);
-    this.isPlaying = true;
-  }
-
   getPlayerStatus() {
-    const token = localStorage.getItem('access-token');
+    const token = this.getToken();
     const playerSub = this.spotifyService
       .getPlayerStatus(token)
       .subscribe((status) => {
@@ -61,14 +55,20 @@ export class PlayerCardComponent implements OnInit, OnDestroy {
     this.subs.push(playerSub);
   }
 
+  onPrevious() {
+    const token = this.getToken();
+    this.spotifyService.skipToPrevious(token);
+    this.isPlaying = true;
+  }
+
   onNext() {
-    const token = localStorage.getItem('access-token');
+    const token = this.getToken();
     this.spotifyService.skipToNext(token);
     this.isPlaying = true;
   }
 
   onPause() {
-    const token = localStorage.getItem('access-token');
+    const token = this.getToken();
     if (this.isPlaying) {
       this.spotifyService.pausePlayback(token);
     } else {
@@ -79,5 +79,9 @@ export class PlayerCardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.forEach((sub) => sub.unsubscribe());
+  }
+
+  private getToken(): string | null {
+    return localStorage.getItem('access-token');
   }
 }

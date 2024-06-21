@@ -31,9 +31,15 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   artistIcon = faGuitar;
   playlistIcon = faMusic;
 
-  clickButton(button: string) {
-    this.menuSelected = button;
-    this.router.navigate([`player/home`]);
+  clickButton(playlistId: string) {
+    this.menuSelected = playlistId;
+    this.router.navigate(['player/home']);
+    // this.router.navigate([`player/list/playlist/${playlistId}`]);
+  }
+
+  clickPlaylist(playlistId: string) {
+    this.menuSelected = playlistId;
+    this.router.navigate([`player/list/playlist/${playlistId}`]);
   }
 
   getPlaylists() {

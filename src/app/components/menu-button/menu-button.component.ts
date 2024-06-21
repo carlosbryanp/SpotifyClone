@@ -8,7 +8,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class MenuButtonComponent {
   @Input() description: string = '';
   @Input() selected: boolean = false;
-
   @Output() click = new EventEmitter<void>();
 
   onClick() {

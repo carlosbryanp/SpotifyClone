@@ -47,6 +47,23 @@ export function mapToSavedTracks(items: any[]): IMusic[] {
   }));
 }
 
+export function mapToTopTracks(items: any[]): IMusic[] {
+  return items.map((item) => ({
+    id: item.uri,
+    title: item.name,
+    artists: item.artists.map((artist) => ({
+      id: artist.id,
+      name: artist.name,
+    })),
+    album: {
+      id: item.album.id,
+      name: item.album.name,
+      imageUrl: item.album.images.length > 0 ? item.album.images[0].url : '',
+    },
+    time: item.duration_ms,
+  }));
+}
+
 export function mapToCurrentTrack(currentTrack: any): IMusic {
   return {
     id: currentTrack.uri,

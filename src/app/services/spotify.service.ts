@@ -12,6 +12,7 @@ import {
   mapToTopArtist,
   mapToUserData,
   mapToCurrentTrack,
+  mapToTopTracks,
 } from '../common/spotifyHelper';
 import { IMusic } from '../interfaces/IMusic';
 
@@ -96,6 +97,23 @@ export class SpotifyService {
       .pipe(map((response) => mapToUserPlaylists(response.items)));
   }
 
+  getPlaylist(token: string, playlistId: string) {
+    const headers = this.createAuthHeaders(token);
+    return this.http
+      .get<any>(`${this.baseApi}v1/playlists/${playlistId}`, { headers })
+      .pipe(take(1));
+  }
+
+  getPlaylistItems(token: string, playlistId: string) {
+    const headers = this.createAuthHeaders(token);
+    return this.http
+      .get<any>(`${this.baseApi}v1/playlists/${playlistId}/tracks`, { headers })
+      .pipe(
+        take(1),
+        map((r) => mapToSavedTracks(r.items))
+      );
+  }
+
   getTopRead(token: string) {
     const headers = this.createAuthHeaders(token);
     return this.http
@@ -104,6 +122,26 @@ export class SpotifyService {
         { headers }
       )
       .pipe(map((response) => mapToTopArtist(response.items)));
+  }
+
+  getArtist(token: string, artistId: string) {
+    const headers = this.createAuthHeaders(token);
+    return this.http
+      .get<any>(`${this.baseApi}v1/artists/${artistId}`, { headers })
+      .pipe(
+        take(1),
+        map((response) => response)
+      );
+  }
+
+  getArtistTracks(token: string, artistId: string) {
+    const headers = this.createAuthHeaders(token);
+    return this.http
+      .get<any>(`${this.baseApi}v1/artists/${artistId}/top-tracks`, { headers })
+      .pipe(
+        take(1),
+        map((response) => mapToTopTracks(response.tracks))
+      );
   }
 
   getSavedTracks(token: string) {
@@ -134,16 +172,6 @@ export class SpotifyService {
       .subscribe((r) => r);
   }
 
-  skipToPrevious(token: string) {
-    const headers = this.createAuthHeaders(token);
-    this.http
-      .post(`${this.baseApi}v1/me/player/previous`, null, {
-        headers,
-      })
-      .pipe(take(1))
-      .subscribe((r) => r);
-  }
-
   pausePlayback(token: string) {
     const headers = this.createAuthHeaders(token);
     this.http
@@ -158,6 +186,16 @@ export class SpotifyService {
       .put(`${this.baseApi}v1/me/player/play`, null, { headers })
       .pipe(take(1))
       .subscribe((response) => response);
+  }
+
+  skipToPrevious(token: string) {
+    const headers = this.createAuthHeaders(token);
+    this.http
+      .post(`${this.baseApi}v1/me/player/previous`, null, {
+        headers,
+      })
+      .pipe(take(1))
+      .subscribe((r) => r);
   }
 
   async getCurrentTrack(token: string): Promise<IMusic> {

@@ -188,6 +188,20 @@ export class SpotifyService {
       .subscribe((response) => response);
   }
 
+  playTopArtist(token: string, tracksArray: string[]) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    const body = {
+      uris: tracksArray,
+    };
+    this.http
+      .put(`${this.baseApi}v1/me/player/play`, body, { headers })
+      .pipe(take(1))
+      .subscribe((response) => response);
+  }
+
   skipToPrevious(token: string) {
     const headers = this.createAuthHeaders(token);
     this.http

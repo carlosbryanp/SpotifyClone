@@ -2,7 +2,7 @@
   <div class="artist flex">
     <div class="artist-info">
       <span class="title-bg"> {{ topArtist.name }} </span>
-      <button type="button">PLAY</button>
+      <button type="button" (click)="setTopArtist(topArtist.id)">PLAY</button>
     </div>
     <img [src]="topArtist.imageUrl" alt="Imagem do top artista" />
   </div>

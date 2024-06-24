@@ -9,6 +9,7 @@ import { IArtist } from '../../interfaces/IArtist';
 })
 export class TopArtistComponent implements OnInit {
   topArtist: IArtist;
+  tracksArray: string[] = [];
 
   constructor(private spotifyService: SpotifyService) {}
 
@@ -21,5 +22,15 @@ export class TopArtistComponent implements OnInit {
     this.spotifyService.getTopRead(token).subscribe((userTopArtist) => {
       this.topArtist = userTopArtist[0];
     });
+  }
+
+  setTopArtist(artistId) {
+    const token = localStorage.getItem('access-token');
+    this.spotifyService
+      .getArtistTracks(token, artistId)
+      .subscribe((response) => {
+        this.tracksArray = [...response.map((track) => track.id)];
+        this.spotifyService.playTopArtist(token, this.tracksArray);
+      });
   }
 }

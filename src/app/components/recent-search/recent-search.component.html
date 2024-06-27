@@ -5,7 +5,11 @@
   (keyup.Enter)="onSearch()"
 />
 <div class="suggestion flex">
-  <span *ngFor="let search of recentSearches" (click)="defineSearch(search)">
+  <span
+    *ngFor="let search of recentSearches"
+    (click)="defineSearch(search)"
+    (click)="onSearch(search)"
+  >
     {{ search }}
   </span>
 </div>

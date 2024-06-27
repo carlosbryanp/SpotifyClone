@@ -18,6 +18,7 @@ import { TopArtistsComponent } from '../../components/top-artists/top-artists.co
 import { PlayerCardComponent } from '../../components/player-card/player-card.component';
 import { MusicListComponent } from '../music-list/music-list.component';
 import { BannerListComponent } from '../../components/banner-list/banner-list.component';
+import { SearchComponent } from '../search/search.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { BannerListComponent } from '../../components/banner-list/banner-list.co
     PlayerCardComponent,
     MusicListComponent,
     BannerListComponent,
+    SearchComponent,
   ],
   imports: [
     CommonModule,

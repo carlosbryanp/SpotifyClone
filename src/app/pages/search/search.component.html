@@ -1,0 +1,12 @@
+<div class="search-content flex">
+  <div *ngFor="let music of musics">
+    <span>{{ music.name }}</span>
+  </div>
+  <div *ngFor="let playlist of playlists">
+    <span>{{ playlist.name }}</span>
+  </div>
+  <div *ngFor="let artist of artists">
+    <span>{{ artists.name }}</span>
+  </div>
+</div>
+<app-right-panel></app-right-panel>

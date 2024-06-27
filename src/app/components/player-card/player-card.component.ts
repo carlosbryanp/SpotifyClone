@@ -9,7 +9,7 @@ import {
   faPlay,
 } from '@fortawesome/free-solid-svg-icons';
 import { SpotifyService } from '../../services/spotify.service';
-import { Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-player-card',
@@ -48,6 +48,15 @@ export class PlayerCardComponent implements OnInit, OnDestroy {
     const token = this.getToken();
     const playerSub = this.spotifyService
       .getPlayerStatus(token)
+      .pipe(
+        catchError((error) => {
+          console.error(
+            'Necessário estar com o spotify ativo em um dispositivo.',
+            error
+          );
+          return of(null);
+        })
+      )
       .subscribe((status) => {
         this.playerStatus = status;
         this.isPlaying = !status.pausing;

@@ -34,7 +34,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   clickButton(playlistId: string) {
     this.menuSelected = playlistId;
     this.router.navigate(['player/home']);
-    // this.router.navigate([`player/list/playlist/${playlistId}`]);
   }
 
   clickPlaylist(playlistId: string) {

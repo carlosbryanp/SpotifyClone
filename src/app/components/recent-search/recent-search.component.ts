@@ -1,10 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { SpotifyService } from '../../services/spotify.service';
-import { IPlaylist } from '../../interfaces/IPlaylist';
-import { IMusic } from '../../interfaces/IMusic';
-import { IArtist } from '../../interfaces/IArtist';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recent-search',
@@ -17,7 +13,7 @@ export class RecentSearchComponent {
 
   sub: Subscription;
 
-  constructor(private spotifyService: SpotifyService, private router: Router) {}
+  constructor(private spotifyService: SpotifyService) {}
 
   defineSearch(search: string) {
     this.search = search;

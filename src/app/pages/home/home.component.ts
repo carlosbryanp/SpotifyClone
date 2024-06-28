@@ -52,9 +52,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onPlayTrack(music: IMusic) {
     const token = this.getToken();
-    this.spotifyService.addToQueue(token, music.id);
-    this.spotifyService.skipToNext(token);
-    this.playerService.defineCurrentTrack(music);
+    const subPlayTrack = this.spotifyService
+      .addToQueueAndSkip(token, music.id)
+      .subscribe(() => {
+        this.playerService.defineCurrentTrack(music);
+      });
+    this.subs.push(subPlayTrack);
   }
 
   ngOnDestroy(): void {

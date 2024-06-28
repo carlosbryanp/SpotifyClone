@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SpotifyService } from '../../services/spotify.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+
+import { SpotifyService } from '../../services/spotify.service';
 
 @Component({
   selector: 'app-login',

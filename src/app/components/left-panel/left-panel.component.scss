@@ -7,14 +7,16 @@ $h-footer-user: 70px;
 $h-desconsiderar: calc($h-spotify-logo + $h-menu-options + $h-footer-user);
 
 :host {
-  min-width: 300px;
-  max-width: 300px;
-  min-height: 100vh;
+  // min-width: 300px;
+  // max-width: 300px;
+  // min-height: 100vh;
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
   background-color: $cor-fundo2;
   box-shadow: 1px 0px 15px #00000012;
+
+  height: 100vh;
 
   .menus {
     flex-grow: 1;

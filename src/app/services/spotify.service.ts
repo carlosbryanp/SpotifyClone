@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, firstValueFrom, map, Observable, of, take } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  take,
+} from 'rxjs';
 
 import { SpotifyConfiguration } from '../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -15,8 +23,6 @@ import {
   mapToCurrentTrack,
   mapToTopTracks,
 } from '../common/spotifyHelper';
-import { IArtist } from '../interfaces/IArtist';
-import { IPlaylist } from '../interfaces/IPlaylist';
 
 @Injectable({
   providedIn: 'root',
@@ -31,10 +37,6 @@ export class SpotifyService {
 
   deviceId: string;
   user: IUser;
-  // currentTrack: IMusic;
-  artistsSearched: IArtist[] = [];
-  playlistsSearched: IPlaylist[] = [];
-  musicsSearched: IMusic[] = [];
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -141,7 +143,18 @@ export class SpotifyService {
       .get<any>(`${this.baseApi}v1/playlists/${playlistId}/tracks`, { headers })
       .pipe(
         take(1),
-        map((r) => mapToSavedTracks(r.items))
+        map((r) => mapToSavedTracks(r.items)),
+        catchError((error) => {
+          if (error.status === 401) {
+            console.error(
+              'Erro 401: Token expirado. Redirecionando para a página de login.'
+            );
+            this.router.navigate(['/login']);
+          } else {
+            console.error('Erro inesperado:', error);
+          }
+          return of(null);
+        })
       );
   }
 
@@ -200,20 +213,23 @@ export class SpotifyService {
   addToQueue(token: string, musicId: string) {
     const headers = this.createAuthHeaders(token);
     const params = new HttpParams().set('uri', musicId);
-    this.http
-      .post(`${this.baseApi}v1/me/player/queue`, null, { headers, params })
-      .pipe(take(1))
-      .subscribe((r) => r);
+    return this.http.post(`${this.baseApi}v1/me/player/queue`, null, {
+      headers,
+      params,
+    });
+  }
+
+  addToQueueAndSkip(token: string, musicId: string): Observable<any> {
+    return this.addToQueue(token, musicId).pipe(
+      concatMap(() => this.skipToNext(token))
+    );
   }
 
   skipToNext(token: string) {
     const headers = this.createAuthHeaders(token);
-    this.http
-      .post(`${this.baseApi}v1/me/player/next`, null, {
-        headers,
-      })
-      .pipe(take(1))
-      .subscribe((r) => r);
+    return this.http.post(`${this.baseApi}v1/me/player/next`, null, {
+      headers,
+    });
   }
 
   pausePlayback(token: string) {
@@ -278,7 +294,7 @@ export class SpotifyService {
       .set('q', item)
       .set('type', 'artist,track,playlist')
       .set('market', 'BR')
-      .set('limit', 10)
+      .set('limit', 20)
       .set('offset', 0);
     this.http
       .get<any>(`${this.baseApi}v1/search`, { headers, params })
@@ -302,9 +318,12 @@ export class SpotifyService {
         })
       )
       .subscribe((dataSearch) => {
-        this.artistsSearched = dataSearch.artistsResults;
-        this.playlistsSearched = dataSearch.playlistsResults;
-        this.musicsSearched = dataSearch.tracksResults;
+        const jsonMusics = JSON.stringify(dataSearch.tracksResults);
+        const jsonArtists = JSON.stringify(dataSearch.artistsResults);
+        const jsonPlaylists = JSON.stringify(dataSearch.playlistsResults);
+        localStorage.setItem('artists', jsonArtists);
+        localStorage.setItem('playlists', jsonPlaylists);
+        localStorage.setItem('musics', jsonMusics);
         this.router.navigate(['player/search']);
       });
   }

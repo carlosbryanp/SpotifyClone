@@ -73,20 +73,10 @@ export class MusicListComponent implements OnInit, OnDestroy {
 
   onPlayTrack(music: IMusic) {
     const token = localStorage.getItem('access-token');
-    this.spotifyService.addToQueue(token, music.id);
-    this.spotifyService.skipToNext(token);
+    this.spotifyService.addToQueueAndSkip(token, music.id).subscribe(() => {
+      this.playerService.defineCurrentTrack(music);
+    });
   }
-
-  // defineBanner(playlistId: string) {
-  //   const token = localStorage.getItem('access-token');
-  //   this.spotifyService
-  //     .getPlaylist(token, playlistId)
-  //     .subscribe((bannerData) => {
-  //       this.bannerName = bannerData.name;
-  //       this.bannerImage =
-  //         bannerData.images.length > 0 ? bannerData.images[0].url : '';
-  //     });
-  // }
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();

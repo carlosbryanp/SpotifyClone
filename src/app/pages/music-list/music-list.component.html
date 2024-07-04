@@ -1,5 +1,12 @@
 <div class="list-content">
+  <app-alert
+    [message]="error"
+    *ngIf="error"
+    (close)="onHandleError()"
+  ></app-alert>
+
   <app-banner-list></app-banner-list>
+
   <table class="table mt-3">
     <thead>
       <tr>
@@ -25,4 +32,3 @@
     </tbody>
   </table>
 </div>
-<!-- <app-right-panel></app-right-panel> -->

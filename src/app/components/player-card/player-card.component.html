@@ -1,8 +1,10 @@
 <div class="flex container card" *ngIf="currentTrack">
-  <img
-    [src]="currentTrack.album.imageUrl"
-    alt="Imagem da musica atual que está tocando."
-  />
+  <app-alert
+    [message]="error"
+    *ngIf="error"
+    (close)="onHandleError()"
+  ></app-alert>
+  <img [src]="currentTrack.album.imageUrl" alt="Imagem da musica atual." />
   <span> {{ currentTrack.title }} </span>
   <div class="player-options flex">
     <fa-icon

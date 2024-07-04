@@ -9,7 +9,8 @@ import {
   faPlay,
 } from '@fortawesome/free-solid-svg-icons';
 import { SpotifyService } from '../../services/spotify.service';
-import { catchError, of, Subscription } from 'rxjs';
+import { catchError, of, Subscription, take } from 'rxjs';
+import { newMusic } from '../../common/factories';
 
 @Component({
   selector: 'app-player-card',
@@ -17,10 +18,11 @@ import { catchError, of, Subscription } from 'rxjs';
   styleUrl: './player-card.component.scss',
 })
 export class PlayerCardComponent implements OnInit, OnDestroy {
-  currentTrack: IMusic;
+  currentTrack: IMusic = newMusic(); // apagar
   subs: Subscription[] = [];
   playerStatus: IPlayerStatus;
-  isPlaying: boolean = false;
+  isPlaying: boolean = true;
+  error: string = null;
 
   playIcon = faPlay;
   pauseIcon = faPause;
@@ -39,7 +41,7 @@ export class PlayerCardComponent implements OnInit, OnDestroy {
 
   getCurrentTrack() {
     const sub = this.playerService.currentTrack.subscribe((track) => {
-      this.currentTrack = track;
+      this.currentTrack = track || newMusic();
     });
     this.subs.push(sub);
   }
@@ -50,18 +52,26 @@ export class PlayerCardComponent implements OnInit, OnDestroy {
       .getPlayerStatus(token)
       .pipe(
         catchError((error) => {
-          console.error(
-            'Necessário estar com o spotify ativo em um dispositivo.',
-            error
-          );
+          this.error =
+            'É necessário estar com um dispositivo conectado ao spotify.';
           return of(null);
         })
       )
       .subscribe((status) => {
         this.playerStatus = status;
-        this.isPlaying = !status.pausing;
+        if (status && typeof status.pausing !== 'undefined') {
+          this.isPlaying = !status.pausing;
+        } else if (status && typeof status.resuming !== 'undefined') {
+          this.isPlaying = !status.resuming;
+        } else {
+          this.isPlaying = false;
+        }
       });
     this.subs.push(playerSub);
+  }
+
+  onHandleError() {
+    this.error = null;
   }
 
   onPrevious() {
@@ -79,9 +89,29 @@ export class PlayerCardComponent implements OnInit, OnDestroy {
   onPause() {
     const token = this.getToken();
     if (this.isPlaying) {
-      this.spotifyService.pausePlayback(token);
+      this.spotifyService
+        .pausePlayback(token)
+        .pipe(
+          take(1),
+          catchError((error) => {
+            this.error =
+              'É necessário estar com um dispositivo conectado ao spotify.';
+            return of(null);
+          })
+        )
+        .subscribe((r) => r);
     } else {
-      this.spotifyService.resumePlayback(token);
+      this.spotifyService
+        .resumePlayback(token)
+        .pipe(
+          take(1),
+          catchError((error) => {
+            this.error =
+              'É necessário estar com um dispositivo conectado ao spotify.';
+            return of(null);
+          })
+        )
+        .subscribe((r) => r);
     }
     this.isPlaying = !this.isPlaying;
   }

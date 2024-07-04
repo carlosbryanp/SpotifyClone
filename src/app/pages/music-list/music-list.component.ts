@@ -4,7 +4,8 @@ import { SpotifyService } from '../../services/spotify.service';
 import { IMusic } from '../../interfaces/IMusic';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { PlayerService } from '../../services/player.service';
-import { Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
+import { newMusic } from '../../common/factories';
 
 @Component({
   selector: 'app-music-list',
@@ -13,10 +14,11 @@ import { Subscription } from 'rxjs';
 })
 export class MusicListComponent implements OnInit, OnDestroy {
   musics: IMusic[] = [];
-  currentTrack: IMusic;
+  currentTrack: IMusic = newMusic();
   sub: Subscription;
   bannerImage: string;
   bannerName: string;
+  error: string = null;
 
   playIcon = faPlay;
 
@@ -73,9 +75,22 @@ export class MusicListComponent implements OnInit, OnDestroy {
 
   onPlayTrack(music: IMusic) {
     const token = localStorage.getItem('access-token');
-    this.spotifyService.addToQueueAndSkip(token, music.id).subscribe(() => {
-      this.playerService.defineCurrentTrack(music);
-    });
+    this.spotifyService
+      .addToQueueAndSkip(token, music.id)
+      .pipe(
+        catchError((error) => {
+          this.error =
+            'É necessário estar com um dispositivo conectado ao spotify.';
+          return of(null);
+        })
+      )
+      .subscribe(() => {
+        this.playerService.defineCurrentTrack(music);
+      });
+  }
+
+  onHandleError() {
+    this.error = null;
   }
 
   ngOnDestroy(): void {

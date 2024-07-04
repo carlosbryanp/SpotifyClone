@@ -3,7 +3,8 @@ import { SpotifyService } from '../../services/spotify.service';
 import { IMusic } from '../../interfaces/IMusic';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { PlayerService } from '../../services/player.service';
-import { Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
+import { newMusic } from '../../common/factories';
 
 @Component({
   selector: 'app-home',
@@ -12,9 +13,9 @@ import { Subscription } from 'rxjs';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   musics: IMusic[] = [];
-  currentTrack: IMusic;
+  currentTrack: IMusic = newMusic();
   playIcon = faPlay;
-
+  error: string = null;
   subs: Subscription[] = [];
 
   constructor(
@@ -31,6 +32,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     const token = this.getToken();
     const subTracks = this.spotifyService
       .getSavedTracks(token)
+      .pipe(
+        catchError((error) => {
+          if (error.status === 401) {
+            console.error(
+              'É necessário estar com um dispositivo conectado ao spotify.'
+            );
+          } else {
+            console.error('Erro inesperado:', error);
+          }
+          return of(null);
+        })
+      )
       .subscribe((music) => {
         this.musics = music;
       });
@@ -54,6 +67,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     const token = this.getToken();
     const subPlayTrack = this.spotifyService
       .addToQueueAndSkip(token, music.id)
+      .pipe(
+        catchError((error) => {
+          this.error =
+            'É necessário estar com um dispositivo conectado ao spotify.';
+          return of(null);
+        })
+      )
       .subscribe(() => {
         this.playerService.defineCurrentTrack(music);
       });
@@ -62,6 +82,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.forEach((sub) => sub.unsubscribe());
+  }
+
+  onHandleError() {
+    this.error = null;
   }
 
   private getToken(): string | null {

@@ -2,6 +2,7 @@ import { IArtist } from '../interfaces/IArtist';
 import { IMusic } from '../interfaces/IMusic';
 import { IPlaylist } from '../interfaces/IPlaylist';
 import { IUser } from '../interfaces/IUser';
+import { newMusic, newPlaylist } from './factories';
 
 export function mapToUserData(response: any): IUser {
   return {
@@ -65,6 +66,10 @@ export function mapToTopTracks(items: any[]): IMusic[] {
 }
 
 export function mapToCurrentTrack(currentTrack: any): IMusic {
+  if (!currentTrack) {
+    return newMusic();
+  }
+
   return {
     id: currentTrack.uri,
     title: currentTrack.name,

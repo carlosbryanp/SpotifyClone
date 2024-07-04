@@ -1,0 +1,10 @@
+<div class="keen-slider artists mt-2" #sliderRef>
+  <div
+    class="keen-slider__slide artist-item"
+    *ngFor="let artist of artists"
+    (click)="artistClick(artist.id)"
+  >
+    <img [src]="artist.imageUrl" alt="Imagem do artista" />
+    <span>{{ artist.name }}</span>
+  </div>
+</div>

@@ -23,6 +23,7 @@ import {
   mapToCurrentTrack,
   mapToTopTracks,
 } from '../common/spotifyHelper';
+import { newMusic } from '../common/factories';
 
 @Injectable({
   providedIn: 'root',
@@ -234,18 +235,14 @@ export class SpotifyService {
 
   pausePlayback(token: string) {
     const headers = this.createAuthHeaders(token);
-    this.http
-      .put(`${this.baseApi}v1/me/player/pause`, null, { headers })
-      .pipe(take(1))
-      .subscribe((response) => response);
+    return this.http.put(`${this.baseApi}v1/me/player/pause`, null, {
+      headers,
+    });
   }
 
   resumePlayback(token: string) {
     const headers = this.createAuthHeaders(token);
-    this.http
-      .put(`${this.baseApi}v1/me/player/play`, null, { headers })
-      .pipe(take(1))
-      .subscribe((response) => response);
+    return this.http.put(`${this.baseApi}v1/me/player/play`, null, { headers });
   }
 
   playTopArtist(token: string, tracksArray: string[]) {
@@ -276,7 +273,16 @@ export class SpotifyService {
     const headers = this.createAuthHeaders(token);
     const music$ = this.http
       .get<any>(`${this.baseApi}v1/me/player/currently-playing`, { headers })
-      .pipe(map((response) => mapToCurrentTrack(response.item)));
+      .pipe(
+        catchError((error) => {
+          console.error('A reprodução não está disponível ou ativa');
+          return of(null);
+        }),
+        // map((response) => mapToCurrentTrack(response.item))
+        map((response) =>
+          response ? mapToCurrentTrack(response.item) : newMusic()
+        )
+      );
     const music = await firstValueFrom(music$);
     return music;
   }

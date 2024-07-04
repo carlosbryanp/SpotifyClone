@@ -1,0 +1,10 @@
+<div class="keen-slider playlists mt-2" #sliderRef>
+  <div
+    class="keen-slider__slide playlist-item card"
+    *ngFor="let playlist of playlists"
+    (click)="playlistClick(playlist.id)"
+  >
+    <img [src]="playlist.imageUrl" alt="Imagem da playlist" />
+    <span>{{ playlist.name }}</span>
+  </div>
+</div>

@@ -1,4 +1,4 @@
 export interface IPlayerStatus {
-  pausing: string;
-  resuming: string;
+  pausing?: string;
+  resuming?: string;
 }

@@ -1,29 +1,16 @@
-<div class="search-content flex">
+<div class="search-content">
   <span class="title-bg mt-4">Playlists</span>
-  <div class="playlists flex mt-2">
-    <div
-      class="playlist-item card flex"
-      *ngFor="let playlist of playlists"
-      (click)="playlistClick(playlist.id)"
-    >
-      <img [src]="playlist.imageUrl" alt="Imagem da playlist" />
-      <span>{{ playlist.name }}</span>
-    </div>
-  </div>
+  <app-searched-playlist></app-searched-playlist>
 
-  <span class="title-bg mt-4">Artistas</span>
-  <div class="artists flex mt-2">
-    <div
-      class="artist-item flex"
-      *ngFor="let artist of artists"
-      (click)="artistClick(artist.id)"
-    >
-      <img [src]="artist.imageUrl" alt="Imagem do artista" />
-      <span>{{ artist.name }}</span>
-    </div>
-  </div>
+  <span class="title-bg mt-4">Artists</span>
+  <app-searched-artist></app-searched-artist>
 
   <span class="title-bg mt-4">Musicas</span>
+  <app-alert
+    [message]="error"
+    *ngIf="error"
+    (close)="onHandleError()"
+  ></app-alert>
   <table class="table mt-3">
     <thead>
       <tr>
@@ -49,5 +36,3 @@
     </tbody>
   </table>
 </div>
-
-<!-- <app-right-panel></app-right-panel> -->

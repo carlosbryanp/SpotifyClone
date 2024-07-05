@@ -1,32 +1,39 @@
-@import "variaveis.scss";
+@import "color-variables.scss";
 
-.top-artists {
-  flex-direction: column;
+:host {
+  background-color: $clr-background-light;
+  padding: 20px;
+  border-radius: 10px;
 
-  div {
-    cursor: pointer;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
+  .top-artists {
+    flex-direction: column;
 
-    &:hover {
-      background-color: $branco;
-    }
+    .artist-item {
+      cursor: pointer;
+      align-items: center;
+      gap: 10px;
+      margin-top: 15px;
+      border-radius: 5px;
 
-    span {
-      color: $preto-transparente-70;
-      font-weight: 600;
-      flex-grow: 1;
-      font-size: 0.85rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      &:hover {
+        background-color: $clr-hover;
+      }
 
-    img {
-      width: 40px;
-      border-radius: 50%;
-      flex-grow: 0;
+      span {
+        color: $clr-text;
+        font-weight: 600;
+        flex-grow: 1;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      img {
+        width: 40px;
+        border-radius: 50%;
+        flex-grow: 0;
+      }
     }
   }
 }

@@ -1,16 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IMusic } from '../../interfaces/IMusic';
-import { IPlayerStatus } from '../../interfaces/IPlayerStatus';
+import { catchError, of, Subscription, take } from 'rxjs';
+
+import { SpotifyService } from '../../services/spotify.service';
 import { PlayerService } from '../../services/player.service';
+import { IPlayerStatus } from '../../interfaces/IPlayerStatus';
+import { IMusic } from '../../interfaces/IMusic';
+import { newMusic } from '../../common/factories';
 import {
   faBackward,
   faForward,
   faPause,
   faPlay,
 } from '@fortawesome/free-solid-svg-icons';
-import { SpotifyService } from '../../services/spotify.service';
-import { catchError, of, Subscription, take } from 'rxjs';
-import { newMusic } from '../../common/factories';
 
 @Component({
   selector: 'app-player-card',
@@ -18,7 +19,7 @@ import { newMusic } from '../../common/factories';
   styleUrl: './player-card.component.scss',
 })
 export class PlayerCardComponent implements OnInit, OnDestroy {
-  currentTrack: IMusic = newMusic(); // apagar
+  currentTrack: IMusic = newMusic();
   subs: Subscription[] = [];
   playerStatus: IPlayerStatus;
   isPlaying: boolean = true;

@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SpotifyService } from '../../services/spotify.service';
-import { IMusic } from '../../interfaces/IMusic';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
-import { PlayerService } from '../../services/player.service';
 import { catchError, of, Subscription } from 'rxjs';
+
+import { SpotifyService } from '../../services/spotify.service';
+import { PlayerService } from '../../services/player.service';
+import { IMusic } from '../../interfaces/IMusic';
 import { newMusic } from '../../common/factories';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-home',

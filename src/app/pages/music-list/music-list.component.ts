@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SpotifyService } from '../../services/spotify.service';
-import { IMusic } from '../../interfaces/IMusic';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
-import { PlayerService } from '../../services/player.service';
 import { catchError, of, Subscription } from 'rxjs';
+
+import { SpotifyService } from '../../services/spotify.service';
+import { PlayerService } from '../../services/player.service';
+import { IMusic } from '../../interfaces/IMusic';
 import { newMusic } from '../../common/factories';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-music-list',
@@ -15,7 +16,7 @@ import { newMusic } from '../../common/factories';
 export class MusicListComponent implements OnInit, OnDestroy {
   musics: IMusic[] = [];
   currentTrack: IMusic = newMusic();
-  sub: Subscription;
+  subs: Subscription[] = [];
   bannerImage: string;
   bannerName: string;
   error: string = null;
@@ -48,19 +49,21 @@ export class MusicListComponent implements OnInit, OnDestroy {
 
   getPlaylistData(playlistId: string) {
     const token = localStorage.getItem('access-token');
-    this.spotifyService
+    const subPlaylistData = this.spotifyService
       .getPlaylistItems(token, playlistId)
       .subscribe((playlistTracks) => {
         this.musics = playlistTracks;
       });
+    this.subs.push(subPlaylistData);
   }
   getArtistData(artistId: string) {
     const token = localStorage.getItem('access-token');
-    this.spotifyService
+    const subGetArtist = this.spotifyService
       .getArtistTracks(token, artistId)
       .subscribe((artistTracks) => {
         this.musics = artistTracks;
       });
+    this.subs.push(subGetArtist);
   }
 
   getArtist(music) {
@@ -68,14 +71,17 @@ export class MusicListComponent implements OnInit, OnDestroy {
   }
 
   getCurrentTrack() {
-    this.sub = this.playerService.currentTrack.subscribe((currentTrack) => {
-      this.currentTrack = currentTrack;
-    });
+    const subCurrentTrack = this.playerService.currentTrack.subscribe(
+      (currentTrack) => {
+        this.currentTrack = currentTrack;
+      }
+    );
+    this.subs.push(subCurrentTrack);
   }
 
   onPlayTrack(music: IMusic) {
     const token = localStorage.getItem('access-token');
-    this.spotifyService
+    const subPlayTrack = this.spotifyService
       .addToQueueAndSkip(token, music.id)
       .pipe(
         catchError((error) => {
@@ -87,6 +93,7 @@ export class MusicListComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.playerService.defineCurrentTrack(music);
       });
+    this.subs.push(subPlayTrack);
   }
 
   onHandleError() {
@@ -94,6 +101,6 @@ export class MusicListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }

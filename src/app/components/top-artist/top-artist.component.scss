@@ -1,4 +1,4 @@
-@import "variaveis.scss";
+@import "color-variables.scss";
 
 .card {
   height: 200px;
@@ -22,18 +22,22 @@
     justify-content: center;
 
     span {
-      color: $preto-transparente-70;
-      text-shadow: 2px 2px 10px $branco;
+      color: $clr-text;
+      text-shadow: 2px 2px 10px $clr-background-light;
     }
 
     button {
       cursor: pointer;
-      color: $branco;
-      background-color: $cor-primaria;
+      color: $clr-background-light;
+      background-color: $clr-primary;
       font-weight: 700;
       border: 0;
       padding: 5px 30px;
       border-radius: 15px;
+
+      &:hover {
+        background-color: $clr-primary-hover;
+      }
     }
   }
 }

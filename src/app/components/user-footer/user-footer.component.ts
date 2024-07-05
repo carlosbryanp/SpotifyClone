@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { IUser } from '../../interfaces/IUser';
+import { Component, OnInit } from '@angular/core';
+
 import { SpotifyService } from '../../services/spotify.service';
+import { IUser } from '../../interfaces/IUser';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-user-footer',

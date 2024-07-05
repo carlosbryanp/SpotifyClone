@@ -1,14 +1,14 @@
-@import "variaveis.scss";
+@import "color-variables.scss";
 
-div {
+.user-footer {
   padding: 5px 30px;
   justify-content: space-between;
   align-items: center;
   height: 100%;
   width: 100%;
-  background-color: $cor-fundo;
-  border-top: 1px solid $preto-transparente-20;
-  color: $cor-primaria;
+  background-color: $clr-background-light;
+  border-top: 1px solid $clr-light-grey;
+  color: $clr-primary;
 
   img {
     flex-grow: 0;
@@ -27,5 +27,9 @@ div {
   .icon {
     flex-grow: 0;
     cursor: pointer;
+
+    &:hover {
+      color: $clr-primary-hover;
+    }
   }
 }

@@ -1,4 +1,4 @@
-@import "variaveis.scss";
+@import "color-variables.scss";
 
 .backdrop {
   position: fixed;
@@ -12,11 +12,11 @@
 
 .alert-box {
   position: fixed;
-  top: 30vh;
-  left: 40vw;
-  // width: 60vw;
+  top: 35vh;
+  left: 35vw;
+  border-radius: 5px;
   padding: 30px;
-  background: white;
+  background: $clr-background-light;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   z-index: 100;
 }
@@ -26,11 +26,15 @@
 
   button {
     cursor: pointer;
-    color: $branco;
-    background-color: $cor-primaria;
+    color: $clr-background-light;
+    background-color: $clr-primary;
     font-weight: 700;
     border: 0;
     padding: 5px 30px;
     border-radius: 15px;
+
+    &:hover {
+      background-color: $clr-primary-hover;
+    }
   }
 }

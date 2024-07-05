@@ -1,11 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
-@import "assets/styles/variaveis.scss";
+@import "assets/styles/color-variables.scss";
 
 html,
 body {
   margin: 0;
   padding: 0;
-  background-color: $cor-fundo;
+  background-color: $clr-background;
 }
 
 * {
@@ -24,7 +24,7 @@ body {
 }
 
 .title {
-  color: $cor-primaria;
+  color: $clr-primary;
   display: block;
   font-weight: 700;
 
@@ -52,7 +52,7 @@ body {
 }
 
 .card {
-  box-shadow: 0px 0px 15px $preto-transparente-03;
-  background-color: $branco;
+  box-shadow: 0px 0px 15px $clr-shadow;
+  background-color: $clr-background-light;
   border-radius: 10px;
 }

@@ -5,9 +5,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import KeenSlider, { KeenSliderInstance } from 'keen-slider';
-import { IPlaylist } from '../../interfaces/IPlaylist';
 import { Router } from '@angular/router';
+
+import { IPlaylist } from '../../interfaces/IPlaylist';
+import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 
 @Component({
   selector: 'app-searched-playlist',

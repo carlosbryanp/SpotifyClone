@@ -1,25 +1,29 @@
-@import "variaveis.scss";
+@import "color-variables.scss";
 
 :host {
+  background-color: $clr-background-light;
+  border-radius: 10px;
+  padding: 20px;
+
   input {
     width: 100%;
     padding: 10px 5px;
     border-radius: 8px;
-    border-color: $preto-transparente-30;
+    border-color: $clr-light-grey;
     font-size: 1rem;
     outline: none;
-    color: $cor-primaria;
+    color: $clr-primary;
     font-size: 1rem;
     font-weight: 500;
 
     &::placeholder {
-      color: $preto-transparente-30;
+      color: $clr-light-grey;
       font-size: 0.85rem;
     }
 
     &:focus,
     &:active {
-      border-color: $cor-primaria;
+      border-color: $clr-primary;
       border-width: 2px;
     }
   }
@@ -28,20 +32,19 @@
     flex-wrap: wrap;
 
     span {
-      color: $preto-transparente-70;
-      background: $branco;
+      color: $clr-text;
+      background: $clr-background-light;
       margin-top: 10px;
       margin-right: 5px;
       padding: 5px 10px;
-      border: 1px solid $preto-transparente-30;
+      border: 1px solid $clr-light-grey;
       border-radius: 20px;
       font-size: 0.9rem;
       font-weight: 500;
       cursor: pointer;
 
       &:hover {
-        background-color: rgba($cor-primaria, $alpha: 0.8);
-        color: $branco;
+        background-color: $clr-hover;
       }
     }
   }

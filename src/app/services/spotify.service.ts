@@ -278,7 +278,6 @@ export class SpotifyService {
           console.error('A reprodução não está disponível ou ativa');
           return of(null);
         }),
-        // map((response) => mapToCurrentTrack(response.item))
         map((response) =>
           response ? mapToCurrentTrack(response.item) : newMusic()
         )

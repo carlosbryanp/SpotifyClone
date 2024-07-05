@@ -2,7 +2,7 @@ import { IArtist } from '../interfaces/IArtist';
 import { IMusic } from '../interfaces/IMusic';
 import { IPlaylist } from '../interfaces/IPlaylist';
 import { IUser } from '../interfaces/IUser';
-import { newMusic, newPlaylist } from './factories';
+import { newMusic } from './factories';
 
 export function mapToUserData(response: any): IUser {
   return {

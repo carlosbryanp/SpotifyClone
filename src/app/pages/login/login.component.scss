@@ -1,4 +1,4 @@
-@import "variaveis";
+@import "color-variables";
 
 :host {
   background-color: #222;
@@ -22,7 +22,7 @@
       min-width: 200px;
       padding: 20px;
       border-radius: 500px;
-      background-color: $cor-primaria;
+      background-color: $clr-primary;
       color: white;
       border: 0;
       cursor: pointer;

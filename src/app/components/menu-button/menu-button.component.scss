@@ -1,4 +1,4 @@
-@import "variaveis.scss";
+@import "color-variables.scss";
 
 :host {
   display: block;
@@ -13,7 +13,12 @@
     font-size: 0.8rem;
     cursor: pointer;
 
+    &:hover {
+      background-color: $clr-hover;
+    }
+
     span {
+      color: $clr-text;
       font-weight: 600;
       display: inline-block;
       vertical-align: middle;
@@ -24,12 +29,12 @@
       text-overflow: ellipsis;
     }
 
-    color: $cor-primaria;
+    color: $clr-primary;
     background-color: transparent;
 
     &.selected {
-      background-color: $cor-primaria;
-      color: $cor-fundo2;
+      background-color: $clr-hover;
+      color: $clr-background-light;
     }
   }
 }

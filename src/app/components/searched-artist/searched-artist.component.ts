@@ -6,8 +6,9 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { IArtist } from '../../interfaces/IArtist';
 import { Router } from '@angular/router';
+
+import { IArtist } from '../../interfaces/IArtist';
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 
 @Component({

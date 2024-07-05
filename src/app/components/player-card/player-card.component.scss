@@ -1,11 +1,11 @@
-@import "variaveis.scss";
+@import "color-variables.scss";
 
 .container {
   flex-direction: column;
   align-items: center;
   padding: 20px 0px;
   gap: 15px;
-  color: $cor-primaria;
+  color: $clr-primary;
 
   span {
     font-weight: 700;
@@ -23,6 +23,10 @@
 
     fa-icon {
       cursor: pointer;
+
+      &:hover {
+        color: $clr-primary-hover;
+      }
     }
   }
 }

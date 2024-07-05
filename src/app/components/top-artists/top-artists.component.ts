@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+
 import { SpotifyService } from '../../services/spotify.service';
 import { IArtist } from '../../interfaces/IArtist';
-import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-top-artists',
@@ -28,11 +29,11 @@ export class TopArtistsComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-  }
-
   clickArtist(artistId: string) {
     this.router.navigate([`player/list/artist/${artistId}`]);
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

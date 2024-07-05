@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { SpotifyService } from '../../services/spotify.service';
 import { Subscription } from 'rxjs';
+
+import { SpotifyService } from '../../services/spotify.service';
 
 @Component({
   selector: 'app-recent-search',
@@ -10,8 +11,6 @@ import { Subscription } from 'rxjs';
 export class RecentSearchComponent {
   recentSearches = ['Psytrance', 'Hip-hop', 'Reggae Classics', 'Rock 00s'];
   search: string = '';
-
-  sub: Subscription;
 
   constructor(private spotifyService: SpotifyService) {}
 

@@ -1,4 +1,4 @@
-@import "variaveis.scss";
+@import "color-variables.scss";
 
 $h-spotify-logo: 120px;
 $h-menus: 10px;
@@ -9,7 +9,7 @@ $h-desconsiderar: calc($h-spotify-logo + 50px + $h-footer-user);
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  background-color: $cor-fundo2;
+  background-color: $clr-background-light;
   box-shadow: 1px 0px 15px #00000012;
 
   height: 100vh;
@@ -47,7 +47,7 @@ $h-desconsiderar: calc($h-spotify-logo + 50px + $h-footer-user);
         align-self: flex-start;
         font-weight: 700;
         font-size: 0.7rem;
-        color: $preto-transparente-30;
+        color: $clr-light-grey;
       }
 
       .playlist-scroll {
@@ -74,9 +74,10 @@ $h-desconsiderar: calc($h-spotify-logo + 50px + $h-footer-user);
 
 ::-webkit-scrollbar {
   width: 8px;
+  display: none;
 
   &-thumb {
-    background: rgba($cor-primaria, $alpha: 0.3);
+    background: rgba($clr-primary, $alpha: 0.3);
     border-radius: 10px;
   }
 
